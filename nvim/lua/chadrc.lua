@@ -1,24 +1,26 @@
--- This file needs to have same structure as nvconfig.lua 
+-- Mirrors the schema in NvChad/ui (v3.0): lua/nvconfig.lua
 -- https://github.com/NvChad/ui/blob/v3.0/lua/nvconfig.lua
--- Please read that file to know all available options :( 
-
 ---@type ChadrcConfig
 local M = {}
 
 M.base46 = {
-	theme = "onedark",
+  -- base46 ships "tokyonight"; matches the tmux status bar + starship prompt.
+  theme = "tokyonight",
+  -- <leader>th cycles dark <-> light.
+  theme_toggle = { "tokyonight", "one_light" },
 
-	-- hl_override = {
-	-- 	Comment = { italic = true },
-	-- 	["@comment"] = { italic = true },
-	-- },
+  -- base46's tokyonight is already ~#1a1b26, but it skews slightly red. Pin the
+  -- most visible groups to the EXACT tmux/starship hexes so nvim/tmux/starship
+  -- look identical. For pixel-exact control, copy a base46 theme into
+  -- lua/themes/<name>.lua and edit its palette table instead.
+  hl_override = {
+    Comment = { fg = "#565f89", italic = true }, -- muted grey, matches starship
+    Visual = { bg = "#3b4261" }, -- selection, matches tmux current-window bg
+  },
 }
 
--- M.nvdash = { load_on_startup = true }
--- M.ui = {
---       tabufline = {
---          lazyload = false
---      }
--- }
+M.ui = {
+  telescope = { style = "bordered" }, -- borders read better with Tokyo Night
+}
 
 return M
