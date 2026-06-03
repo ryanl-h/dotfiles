@@ -92,6 +92,17 @@ nvm()  { _nvm_lazy; nvm  "$@"; }
 node() { _nvm_lazy; node "$@"; }
 npm()  { _nvm_lazy; npm  "$@"; }
 npx()  { _nvm_lazy; npx  "$@"; }
+
+# Neovim/Mason spawn `node` directly (not through this shell), so the lazy nvm
+# wrappers above don't expose it to them. Prepend the newest installed node's
+# bin to PATH cheaply — no nvm.sh sourcing, so this keeps shell startup fast.
+# Re-run `nvm alias default <version>` after upgrading node.
+if [ -d "$NVM_DIR/versions/node" ]; then
+    _node_bin="$NVM_DIR/versions/node/$(command ls -1 "$NVM_DIR/versions/node" | sort -V | tail -1)/bin"
+    [ -d "$_node_bin" ] && export PATH="$_node_bin:$PATH"
+    unset _node_bin
+fi
+
 export KUBECONFIG=~/.kube/config
 
 export PATH="/opt/homebrew/bin:$PATH"
