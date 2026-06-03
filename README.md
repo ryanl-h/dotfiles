@@ -147,3 +147,25 @@ nvim                       # first launch bootstraps lazy.nvim + NvChad
 ```
 
 Then in nvim: `:MasonToolsInstall`, `:TSInstallAll`, `:Lazy build telescope-fzf-native.nvim`, restart.
+
+> Note: `node` must be a real binary on `PATH` for the JS toolchain (`.zshrc` handles this — see [Shell behaviour](#shell-behaviour)). nvim spawns those tools directly, not through the shell.
+
+### Key bindings
+
+Leader is `Space`. NvChad defaults apply (`<leader>ff` find files, `<leader>fw` live grep, `<C-n>` file tree, `<leader>th` themes). Added on top:
+
+| Binding | Action |
+|---------|--------|
+| `<leader>ac` | Toggle in-editor Claude (Team plan, no API key) |
+| `<leader>as` | Send visual selection to Claude |
+| `<leader>aa` / `<leader>ad` | Accept / reject Claude's proposed diff |
+| `<leader>gg` | LazyGit |
+| `<leader>fm` / `<leader>tf` | Format buffer / toggle format-on-save |
+| `<leader>db` / `<leader>dc` | DAP breakpoint / continue (debug) |
+| `<leader>du` / `<leader>de` | DAP toggle UI / eval |
+| `<leader>xx` | Diagnostics panel (Trouble) |
+| `<leader>o` | Symbol outline (Aerial) |
+| `<leader>ft` | Find TODOs |
+| `af`/`if` · `ac`/`ic` · `aa`/`ia` | Text objects: function · class · argument |
+
+Format-on-save is on by default (ruff/prettierd/stylua/shfmt/…); `<leader>tf` disables it per session. Full reference — language support, the AI setup, and the file layout — is in [`nvim/README.md`](nvim/README.md).
