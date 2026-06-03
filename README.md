@@ -1,6 +1,6 @@
 # dotfiles
 
-Terminal setup for macOS — zsh + tmux with a Tokyo Night-flavoured status bar.
+Terminal setup for macOS — zsh + tmux + Neovim with a Tokyo Night-flavoured status bar.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ Without this font, icons will render as boxes or question marks.
 Install [Homebrew](https://brew.sh), then the required tools:
 
 ```sh
-brew install tmux starship zoxide fzf eza bat nvm
+brew install tmux starship zoxide fzf eza bat nvm neovim lazygit ripgrep fd
 ```
 
 Install `kubectl` if you use the Kubernetes aliases:
@@ -38,6 +38,7 @@ ln -sf "$PWD/.tmux.conf"                      ~/.tmux.conf
 ln -sf "$PWD/starship.toml"                   ~/.config/starship.toml
 mkdir -p ~/.config/ghostty
 ln -sf "$PWD/ghostty/config"                  ~/.config/ghostty/config
+ln -sf "$PWD/nvim"                            ~/.config/nvim
 ```
 
 ---
@@ -128,3 +129,21 @@ Config is at `ghostty/config` and sets the font to FiraCode Nerd Font Mono at si
 | `prefix -` | Split pane vertically |
 | `prefix h/j/k/l` | Move between panes (vim-style) |
 | `prefix r` | Reload tmux config |
+
+---
+
+## Neovim setup
+
+A Tokyo Night [NvChad](https://nvchad.com) IDE with full LSP/DAP, format-on-save,
+fuzzy finding, git, and an in-editor Claude that runs on a Claude Team plan with
+**no API key**.
+
+Full documentation — prerequisites, keybindings, language support, and the AI
+setup — lives in [`nvim/README.md`](nvim/README.md).
+
+```sh
+ln -sf "$PWD/nvim" ~/.config/nvim
+nvim                       # first launch bootstraps lazy.nvim + NvChad
+```
+
+Then in nvim: `:MasonToolsInstall`, `:Lazy build telescope-fzf-native.nvim`, restart.
