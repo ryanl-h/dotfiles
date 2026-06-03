@@ -12,6 +12,7 @@ runs on a Claude **Team plan with no API key**.
 | lazygit | `brew install lazygit` | Git TUI via `<leader>gg` (auto-themed by Snacks). |
 | ripgrep, fd | `brew install ripgrep fd` | Telescope live-grep / find-files. |
 | C toolchain | `xcode-select --install` | Builds `telescope-fzf-native`. |
+| tree-sitter CLI | `brew install tree-sitter-cli` | Compiles treesitter parsers (nvim-treesitter's main branch needs it). |
 | Node | via nvm (already configured) | `ts_ls`, `prettierd`, `js-debug`, `marksman`. See **Node on PATH** below. |
 | `claude` CLI | already installed | In-editor Claude (Team-plan auth). |
 | FiraCode Nerd Font | already installed | Icons. |
@@ -26,9 +27,13 @@ ln -sf "$PWD/nvim" ~/.config/nvim
 nvim                       # first launch bootstraps lazy.nvim + NvChad
 ```
 
-On first launch, wait for lazy to finish, then run `:MasonToolsInstall` to pull
-the language tooling and `:Lazy build telescope-fzf-native.nvim` to compile the
-fuzzy sorter. Restart.
+On first launch, wait for lazy to finish, then run:
+
+- `:MasonToolsInstall` — install LSP servers, formatters, linters
+- `:TSInstallAll` — compile the treesitter parsers (needs the `tree-sitter` CLI)
+- `:Lazy build telescope-fzf-native.nvim` — compile the fuzzy sorter
+
+Restart. Parsers install to `~/.local/share/nvim/site/parser/`.
 
 ## In-editor Claude (no API key)
 

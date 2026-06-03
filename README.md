@@ -19,7 +19,7 @@ Without this font, icons will render as boxes or question marks.
 Install [Homebrew](https://brew.sh), then the required tools:
 
 ```sh
-brew install tmux starship zoxide fzf eza bat nvm neovim lazygit ripgrep fd
+brew install tmux starship zoxide fzf eza bat nvm neovim lazygit ripgrep fd tree-sitter-cli
 ```
 
 Install `kubectl` if you use the Kubernetes aliases:
@@ -146,4 +146,4 @@ ln -sf "$PWD/nvim" ~/.config/nvim
 nvim                       # first launch bootstraps lazy.nvim + NvChad
 ```
 
-Then in nvim: `:MasonToolsInstall`, `:Lazy build telescope-fzf-native.nvim`, restart.
+Then in nvim: `:MasonToolsInstall`, `:TSInstallAll`, `:Lazy build telescope-fzf-native.nvim`, restart.
