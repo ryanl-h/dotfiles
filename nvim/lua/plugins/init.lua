@@ -22,37 +22,53 @@ return {
     end,
   },
 
-  -- Semantic text objects on top of NvChad's treesitter. (Task 9)
-  -- NOTE: this uses the master-branch textobjects API to match the treesitter
-  -- revision NvChad pins. If `:Lazy` shows nvim-treesitter on branch `main`,
-  -- switch to the main-branch textobjects setup (see plan Task 9 note).
+  -- Treesitter: NvChad v2.5 drives the MAIN-branch nvim-treesitter (its autocmds
+  -- call `require("nvim-treesitter").install` + `vim.treesitter.start`), so we
+  -- stay on the default (main) branch and only extend the parser list. NvChad
+  -- installs these via its :TSInstallAll command / FileType autocmd.
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, {
         "python", "javascript", "typescript", "tsx", "html", "css", "json",
         "lua", "bash", "yaml", "dockerfile", "markdown", "markdown_inline", "toml",
       })
-      opts.textobjects = {
-        select = {
-          enable = true,
-          lookahead = true,
-          keymaps = {
-            ["af"] = "@function.outer", ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",    ["ic"] = "@class.inner",
-            ["ap"] = "@parameter.outer", ["ip"] = "@parameter.inner",
-          },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = { ["]m"] = "@function.outer", ["]]"] = "@class.outer" },
-          goto_previous_start = { ["[m"] = "@function.outer", ["[["] = "@class.outer" },
-        },
-      }
       return opts
+    end,
+  },
+
+  -- Semantic text objects via the MAIN-branch textobjects API: setup() plus
+  -- manual keymaps that call the select/move helpers. Uses af/if (function),
+  -- ac/ic (class), aa/ia (argument — chosen over ap/ip so we don't shadow the
+  -- built-in paragraph text objects).
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("nvim-treesitter-textobjects").setup { move = { set_jumps = true } }
+
+      local sel = require "nvim-treesitter-textobjects.select"
+      local objects = {
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
+      }
+      for lhs, capture in pairs(objects) do
+        vim.keymap.set({ "x", "o" }, lhs, function()
+          sel.select_textobject(capture, "textobjects")
+        end, { desc = "TS select " .. capture })
+      end
+
+      local move = require "nvim-treesitter-textobjects.move"
+      vim.keymap.set({ "n", "x", "o" }, "]m", function() move.goto_next_start("@function.outer", "textobjects") end, { desc = "Next function" })
+      vim.keymap.set({ "n", "x", "o" }, "[m", function() move.goto_previous_start("@function.outer", "textobjects") end, { desc = "Prev function" })
+      vim.keymap.set({ "n", "x", "o" }, "]]", function() move.goto_next_start("@class.outer", "textobjects") end, { desc = "Next class" })
+      vim.keymap.set({ "n", "x", "o" }, "[[", function() move.goto_previous_start("@class.outer", "textobjects") end, { desc = "Prev class" })
     end,
   },
 }
